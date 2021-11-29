@@ -16,7 +16,7 @@ class ArticlesController < ApplicationController
   def edit; end
 
   def create
-    @article = Article.new(params.require(:article).permit(:title, :description))
+    @article = Article.new(article_params)
     save_result = @article.save
     if save_result
       flash[:notice] = 'Save succeeded'
@@ -27,7 +27,7 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    if @article.update(params.require(:article).permit(:title, :description))
+    if @article.update(article_params)
       flash[:notice] = 'Edit succeeded'
       redirect_to @article
     else
@@ -44,5 +44,9 @@ class ArticlesController < ApplicationController
 
   def fetch_article
     @article = Article.find(params[:id])
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :description)
   end
 end
