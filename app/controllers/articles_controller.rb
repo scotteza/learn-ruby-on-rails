@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class ArticlesController < ApplicationController
-  def show
-    @article = Article.find(params[:id])
-  end
+  before_action :fetch_article, only: %i[show edit update destroy]
+
+  def show; end
 
   def index
     @articles = Article.all
@@ -13,9 +13,7 @@ class ArticlesController < ApplicationController
     @article = Article.new
   end
 
-  def edit
-    @article = Article.find(params[:id])
-  end
+  def edit; end
 
   def create
     @article = Article.new(params.require(:article).permit(:title, :description))
@@ -29,7 +27,6 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    @article = Article.find(params[:id])
     if @article.update(params.require(:article).permit(:title, :description))
       flash[:notice] = 'Edit succeeded'
       redirect_to @article
@@ -39,8 +36,13 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    @article = Article.find(params[:id])
     @article.destroy
     redirect_to articles_path
+  end
+
+  private
+
+  def fetch_article
+    @article = Article.find(params[:id])
   end
 end
